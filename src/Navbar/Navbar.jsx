@@ -1,13 +1,13 @@
 import React from "react";
 import { NavbarContainer, StyledUl, StyledA } from "./NavbarStyled";
-const navLinks = ["race", "pit stop", "chat", "about"];
+const navLinks = ["quit","switch to another game"];
 const Navbar= () => (
   <NavbarContainer>
-    <h3> ⌨ typeracer </h3>
+    <h3> ⌨ typeRacing </h3>
     <StyledUl>
       {navLinks.map((link) => (
         <li key={link}>
-          <StyledA href='#!'> {link} </StyledA>
+          <StyledA href='/'> {link} </StyledA>
         </li>
       ))}
     </StyledUl>
