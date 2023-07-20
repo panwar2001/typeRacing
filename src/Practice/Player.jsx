@@ -1,5 +1,4 @@
 import styled from "styled-components";
-
 const Road = styled.div`
   width: 100%;
   height: 4px;
@@ -17,6 +16,7 @@ const Road = styled.div`
 
 
 const Player= ({ distance }) => {
+  console.log(distance);
   return (
     <>
       <img
@@ -24,7 +24,7 @@ const Player= ({ distance }) => {
         width='58'
         height='24'
         alt='player car'
-        style={{ marginLeft: `${distance * 100 - 7}%` }}
+        style={{ marginLeft: `${distance * 100 }%` }}
         title='Powerty'
       />
       <Road className='mb-4' />

@@ -164,7 +164,7 @@ export default ()=>{
            You are in a single player Race.<br/>
            Go! 
          </Container>
-         <Player distance={.50}/>
+         <Player distance={correct/100.0}/>
          <InnerContainer>
              <TextContainer>
              {(status === 'started') && words.map((word, i) => (
