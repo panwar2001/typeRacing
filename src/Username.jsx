@@ -1,5 +1,6 @@
 import "./username.css";
 import { useState } from "react";
+
 export default ()=>{
     const [name,setName]=useState('');
    return <div className="name">
@@ -11,5 +12,4 @@ export default ()=>{
         <button >Submit</button>        
      </div>
    </div>
-
 }
