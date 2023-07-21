@@ -33,7 +33,7 @@ return <BorderedDiv>
         <table>
         <thead>
             <tr>
-             <th colSpan={2}>  
+             <th colSpan={3}>  
                 <InnerContainer>
                     LeaderBoard 
                 </InnerContainer>
@@ -42,6 +42,11 @@ return <BorderedDiv>
            </thead>
            <thead>
             <tr>
+            <th> 
+                <InnerContainer>
+                 Rank  
+                </InnerContainer>
+               </th> 
              <th> 
                 <InnerContainer>
                  Name  
@@ -55,8 +60,13 @@ return <BorderedDiv>
              </tr>
            </thead>
            <tbody>
-           {data.map((data)=>{
+           {data.map((data,index)=>{
             return <tr>
+              <td> 
+               <InnerContainer>
+                 {index+1}  
+                </InnerContainer>
+               </td>
                <td> 
                <InnerContainer>
                  {data[0]}  

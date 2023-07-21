@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import Player from "./Player";
 import {useState, useEffect, useRef} from 'react'
-import {count, generate} from 'random-words'
 import { useLocation } from "react-router-dom";
 import { io } from 'socket.io-client';
 import "./TypingGame.css";
+import axios from "axios";
 import LeaderBoard from "../LeaderBoard";
 const easy=io("https://typerace-10ww.onrender.com/easy");
 const medium=io("https://typerace-10ww.onrender.com/medium");
@@ -75,10 +75,6 @@ export default ()=>{
   const location = useLocation();
   const name=location.state?.name;
   const level=location.state?.level;
-  const NUMB_OF_WORDS=level=='Easy'?50:(level=='Medium'?80:120);
-  useEffect(() => {
-    setWords(generateWords())
-  }, [])
 
   useEffect(() => {
     if (status === 'started') {
@@ -104,25 +100,38 @@ export default ()=>{
       setCurrCharIndex(-1)
       setCurrChar("")
     }
+   
     if(level=='Easy'){
+      axios.get("https://typerace-10ww.onrender.com/easyParagraph").then((response)=>{
+        setWords(response.data.paragraph);
+      });
         easy.on("players_update",(countdown,data)=>{
            setCountDown(countdown);
            if(countdown==0){
+            axios.get("https://typerace-10ww.onrender.com/easyParagraph").then((response)=>{
+              setWords(response.data.paragraph);
+            });
               clear();
             }
             const arr=Object.keys(data).map((id)=>{
               return [data[id].name,data[id].wpm];
             })
             arr.sort((a,b)=>{
-              return a[1]>b[1];
+              return a[1]<b[1];
             })
              setPlayers(arr);
         }); 
       }else if(level=='Medium'){
+        axios.get("https://typerace-10ww.onrender.com/mediumParagraph").then((response)=>{
+          setWords(response.data.paragraph);
+        });      
         medium.on("players_update",(countdown,data)=>{
           setCountDown(countdown);
           if(countdown==0){
             clear();
+            axios.get("https://typerace-10ww.onrender.com/mediumParagraph").then((response)=>{
+              setWords(response.data.paragraph);
+            });    
           }
           const arr=Object.keys(data).map((id)=>{
             return [data[id].name,data[id].wpm];
@@ -133,10 +142,16 @@ export default ()=>{
           setPlayers(arr);
        });
       }else{
+        axios.get("https://typerace-10ww.onrender.com/hardParagraph").then((response)=>{
+          setWords(response.data.paragraph);
+        }); 
         hard.on("players_update",(countdown,data)=>{
           setCountDown(countdown);
           if(countdown==0){
             clear();
+            axios.get("https://typerace-10ww.onrender.com/hardParagraph").then((response)=>{
+              setWords(response.data.paragraph);
+            });    
           }
           const arr=Object.keys(data).map((id)=>{
             return [data[id].name,data[id].wpm];
@@ -148,10 +163,6 @@ export default ()=>{
        });
       }
   },[])  
-
-  function generateWords() {
-    return new Array(NUMB_OF_WORDS).fill(null).map(() => generate())
-  }
 
 
   function handleKeyDown({keyCode, key}) {
