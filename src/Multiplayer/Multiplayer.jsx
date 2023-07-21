@@ -1,12 +1,14 @@
 import styled from "styled-components";
 import Player from "./Player";
 import {useState, useEffect, useRef} from 'react'
-import {generate} from 'random-words'
+import {count, generate} from 'random-words'
 import { useLocation } from "react-router-dom";
-
+import { io } from 'socket.io-client';
 import "./TypingGame.css";
-
-const SECONDS = 30
+import LeaderBoard from "../LeaderBoard";
+const easy=io("http://localhost:8080/easy");
+const medium=io("http://localhost:8080/medium");
+const hard=io("http://localhost:8080/hard");
 
  const HeaderDiv=styled.div`
   color:white;
@@ -60,19 +62,20 @@ const StyledInput = styled.input`
 
 export default ()=>{
   const [words, setWords] = useState([])
-  const [countDown, setCountDown] = useState(SECONDS)
+  const [countDown, setCountDown] = useState('');
   const [currInput, setCurrInput] = useState("")
   const [currWordIndex, setCurrWordIndex] = useState(0)
   const [currCharIndex, setCurrCharIndex] = useState(-1)
   const [currChar, setCurrChar] = useState("")
   const [correct, setCorrect] = useState(0)
   const [incorrect, setIncorrect] = useState(0)
-  const [status, setStatus] = useState("waiting")
+  const [status, setStatus] = useState("started")
   const textInput = useRef(null)
+  const [players,setPlayers]=useState(null);
   const location = useLocation();
   const name=location.state?.name;
   const level=location.state?.level;
-  const NUMB_OF_WORDS=level=='easy'?50:(level=='medium'?80:120);
+  const NUMB_OF_WORDS=level=='Easy'?50:(level=='Medium'?80:120);
   useEffect(() => {
     setWords(generateWords())
   }, [])
@@ -81,40 +84,75 @@ export default ()=>{
     if (status === 'started') {
       textInput.current.focus()
     }
-  }, [status])
+  }, [status]);
 
-  function generateWords() {
-    return new Array(NUMB_OF_WORDS).fill(null).map(() => generate())
-  }
+  useEffect(()=>{
+    if(level=='Easy'){
+      easy.emit("playerInfo",name,correct*2);
+    }else if(level=='Medium'){
+      medium.emit("playerInfo",name,correct*2);
+    }else{
+      hard.emit("playerInfo",name,correct*2);
+    }
+  },[correct]);
 
-  function start() {
-
-    if (status === 'finished') {
-      setWords(generateWords())
+  useEffect(()=>{
+    const clear=()=>{
       setCurrWordIndex(0)
       setCorrect(0)
       setIncorrect(0)
       setCurrCharIndex(-1)
       setCurrChar("")
     }
-
-    if (status !== 'started') {
-      setStatus('started')
-      let interval = setInterval(() => {
-        setCountDown((prevCountdown) => {
-          if (prevCountdown === 0) {
-            clearInterval(interval)
-            setStatus('finished')
-            setCurrInput("")
-            return SECONDS
-          } else {
-            return prevCountdown - 1
+    if(level=='Easy'){
+        easy.on("players_update",(countdown,data)=>{
+           setCountDown(countdown);
+           if(countdown==0){
+              clear();
+            }
+            const arr=Object.keys(data).map((id)=>{
+              return [data[id].name,data[id].wpm];
+            })
+            arr.sort((a,b)=>{
+              return a[1]>b[1];
+            })
+             setPlayers(arr);
+        }); 
+      }else if(level=='Medium'){
+        medium.on("players_update",(countdown,data)=>{
+          setCountDown(countdown);
+          if(countdown==0){
+            clear();
           }
-        }  )
-      } ,  1000 )
-    }
-    
+          const arr=Object.keys(data).map((id)=>{
+            return [data[id].name,data[id].wpm];
+          })
+          arr.sort((a,b)=>{
+            return a[1]>b[1];
+          })
+          setPlayers(arr);
+       });
+      }else{
+        hard.on("players_update",(countdown,data)=>{
+          setCountDown(countdown);
+          if(countdown==0){
+            clear();
+          }
+          const arr=Object.keys(data).map((id)=>{
+            return [data[id].name,data[id].wpm];
+          })
+          arr.sort((a,b)=>{
+            return a[1]>b[1];
+          })
+          setPlayers(arr);
+       });
+      }
+  },[])  
+
+  function generateWords() {
+    return new Array(NUMB_OF_WORDS).fill(null).map(() => generate())
   }
+
 
   function handleKeyDown({keyCode, key}) {
     // space bar 
@@ -157,15 +195,13 @@ export default ()=>{
     }
   }
 
- return (<BorderedDiv>
+
+ return (<><BorderedDiv>
          <HeaderDiv>
             Hi {name}, you are at {level} level
             <br/>
-            Practice Racetrack | Time Left: {countDown} | Words per minute:{correct*2} 
+            Practice Racetrack | Time Left For Next Game: {countDown} | Words per minute:{correct*2} 
          </HeaderDiv>
-         <ButtonsContainer onClick={()=>start()}>
-             Start
-         </ButtonsContainer>
          <Container>
            You are in a single player Race.<br/>
            Go! 
@@ -195,5 +231,7 @@ export default ()=>{
                autoFocus/> 
          </InnerContainer>
        </BorderedDiv>
+        {players&&<LeaderBoard data={players}/>}
+       </>
        )    
 }
