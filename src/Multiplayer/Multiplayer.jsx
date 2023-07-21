@@ -6,9 +6,9 @@ import { useLocation } from "react-router-dom";
 import { io } from 'socket.io-client';
 import "./TypingGame.css";
 import LeaderBoard from "../LeaderBoard";
-const easy=io("http://localhost:8080/easy");
-const medium=io("http://localhost:8080/medium");
-const hard=io("http://localhost:8080/hard");
+const easy=io("https://typerace-10ww.onrender.com/easy");
+const medium=io("https://typerace-10ww.onrender.com/medium");
+const hard=io("https://typerace-10ww.onrender.com/hard");
 
  const HeaderDiv=styled.div`
   color:white;
