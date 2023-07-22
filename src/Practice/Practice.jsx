@@ -143,6 +143,7 @@ export default ()=>{
   }
 
   function handleKeyDown({keyCode, key}) {
+    if(keyCode==16)return;
     if (keyCode === 32) {
       checkMatch()
       setCurrInput("")

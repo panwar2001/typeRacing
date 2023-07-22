@@ -173,6 +173,7 @@ export default ()=>{
 
 
   function handleKeyDown({keyCode, key}) {
+    if(keyCode==16)return;
     if (keyCode === 32) {
       checkMatch()
       setCurrInput("")
@@ -188,7 +189,7 @@ export default ()=>{
   }
 
   function checkMatch() {
-    const wordToCompare = words[currWordIndex]
+    const wordToCompare = words[currWordIndex];
     const doesItMatch = wordToCompare === currInput.trim()
     if (doesItMatch) {
       setCorrect(correct + 1)
