@@ -5,7 +5,7 @@ import { io } from 'socket.io-client';
 import "./TypingGame.css";
 import axios from "axios";
 import LeaderBoard from "../LeaderBoard";
-import ProgressBar from "./ProgressBar";
+import ProgressBar from "../ProgressBar";
 const URL="https://typerace-10ww.onrender.com";
 const easy=io(`${URL}/easy`);
 const medium=io(`${URL}/medium`);

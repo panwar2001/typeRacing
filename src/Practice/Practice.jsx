@@ -1,10 +1,10 @@
 import styled from "styled-components";
-import Player from "./Player";
 import {useState, useEffect, useRef} from 'react'
 import {generate} from 'random-words'
 import { useLocation } from "react-router-dom";
 
 import "./TypingGame.css";
+import ProgressBar from "../ProgressBar";
 
 const SECONDS = 30
 
@@ -72,7 +72,9 @@ export default ()=>{
   const location = useLocation();
   const name=location.state?.name;
   const level=location.state?.level;
-  const NUMB_OF_WORDS=level=='easy'?50:(level=='medium'?80:120);
+  const NUMB_OF_WORDS=level=='Easy'?50:(level=='Medium'?80:120);
+  const startTime=useRef();
+  const [wpm,setWpm]=useState();
   useEffect(() => {
     setWords(generateWords())
   }, [])
@@ -96,16 +98,23 @@ export default ()=>{
       setIncorrect(0)
       setCurrCharIndex(-1)
       setCurrChar("")
+      startTime.current=null;
     }
-
+     let getElapsedTime=()=>{
+     return (Date.now()-startTime.current)*1.0/60000.0;
+     }
     if (status !== 'started') {
       setStatus('started')
+      startTime.current=Date.now();
       let interval = setInterval(() => {
-        setCountDown((prevCountdown) => {
+        setWpm((prevTime)=>{
+          return getElapsedTime();
+        });
+
+         setCountDown((prevCountdown) => {
           if (prevCountdown === 0) {
             clearInterval(interval)
             setStatus('finished')
-            setCurrInput("")
             return SECONDS
           } else {
             return prevCountdown - 1
@@ -117,13 +126,11 @@ export default ()=>{
   }
 
   function handleKeyDown({keyCode, key}) {
-    // space bar 
     if (keyCode === 32) {
       checkMatch()
       setCurrInput("")
       setCurrWordIndex(currWordIndex + 1)
       setCurrCharIndex(-1)
-    // backspace
     } else if (keyCode === 8) {
       setCurrCharIndex(currCharIndex - 1)
       setCurrChar("")
@@ -161,7 +168,7 @@ export default ()=>{
          <HeaderDiv>
             Hi {name}, you are at {level} level
             <br/>
-            Practice Racetrack | Time Left: {countDown} | Words per minute:{correct*2} 
+            Practice Racetrack | Time Left: {countDown} | Words per minute:{Math.round((correct*100.0)/wpm)/100} 
          </HeaderDiv>
          <ButtonsContainer onClick={()=>start()}>
              Start
@@ -170,7 +177,7 @@ export default ()=>{
            You are in a single player Race.<br/>
            Go! 
          </Container>
-         <Player distance={correct/100.0}/>
+         <ProgressBar correct={correct} totalWords={words.length}/>
          <InnerContainer>
              <TextContainer>
              {(status === 'started') && words.map((word, i) => (
