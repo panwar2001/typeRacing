@@ -6,9 +6,10 @@ import "./TypingGame.css";
 import axios from "axios";
 import LeaderBoard from "../LeaderBoard";
 import ProgressBar from "./ProgressBar";
-const easy=io("http://localhost:8080/easy");
-const medium=io("http://localhost:8080/medium");
-const hard=io("http://localhost:8080/hard");
+const URL="https://typerace-10ww.onrender.com";
+const easy=io(`${URL}/easy`);
+const medium=io(`${URL}/medium`);
+const hard=io(`${URL}/hard`);
 
  const HeaderDiv=styled.div`
   color:white;
@@ -103,14 +104,14 @@ export default ()=>{
     }
    
     if(level=='Easy'){
-      axios.get("http://localhost:8080/easyParagraph").then((response)=>{
+      axios.get(`${URL}/easyParagraph`).then((response)=>{
         setWords(response.data.paragraph);
       });
         easy.on("players_update",(countdown,data,timeElapsed)=>{
            setCountDown(countdown);
            setWpm(Math.round(data[easy.id].words*100.0/timeElapsed)/100.0);
            if(countdown==0){
-            axios.get("http://localhost:8080/easyParagraph").then((response)=>{
+            axios.get(`${URL}/easyParagraph`).then((response)=>{
               setWords(response.data.paragraph);
             });
               clear();
@@ -124,7 +125,7 @@ export default ()=>{
              setPlayers(arr);
         }); 
       }else if(level=='Medium'){
-        axios.get("http://localhost:8080/mediumParagraph").then((response)=>{
+        axios.get(`${URL}/mediumParagraph`).then((response)=>{
           setWords(response.data.paragraph);
         });      
         medium.on("players_update",(countdown,data,timeElapsed)=>{
@@ -132,7 +133,7 @@ export default ()=>{
           setCountDown(countdown);
           setWpm(Math.round(data[medium.id].words*100.0/timeElapsed)/100.0);
           if(countdown==0){
-            axios.get("http://localhost:8080/mediumParagraph").then((response)=>{
+            axios.get(`${URL}/mediumParagraph`).then((response)=>{
               setWords(response.data.paragraph);
             });    
             clear();
@@ -146,7 +147,7 @@ export default ()=>{
           setPlayers(arr);
        });
       }else if(level=='Hard'){
-         axios.get("http://localhost:8080/hardParagraph").then((response)=>{
+         axios.get(`${URL}/hardParagraph`).then((response)=>{
               setWords(response.data.paragraph);
             }); 
          hard.on("players_update",(countdown,data,timeElapsed)=>{
@@ -155,7 +156,7 @@ export default ()=>{
           setWpm(Math.round(data[hard.id].words*100.0/timeElapsed)/100.0);
           if(countdown==0){
             clear();
-            axios.get("http://localhost:8080/hardParagraph").then((response)=>{
+            axios.get(`${URL}/hardParagraph`).then((response)=>{
               setWords(response.data.paragraph);
             });    
           }
