@@ -1958,7 +1958,7 @@ function generate(count,type) {
      for(let i=0;i<count;i++){
       let word=wordList[Math.random()*1952|0];
       if(type!="easy"){
-       if(Math.random()*1|0){
+       if(Math.random()*2|0){
          word+=complex[(Math.random()*13|0)];
        }
       }

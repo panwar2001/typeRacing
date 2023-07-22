@@ -5,7 +5,6 @@ import axios from "axios";
 import "./TypingGame.css";
 import ProgressBar from "../ProgressBar";
 
-const SECONDS = 30
 
  const HeaderDiv=styled.div`
   color:white;
@@ -54,10 +53,23 @@ const StyledInput = styled.input`
   background-color: "white"
 `;
 
+const TimeContainer=styled.div`
+display:flex;
+background-color: black;
+color: white;
+width:30%;
+border:2px solid silver;
+font-size: 20px;
+padding: 10px 60px;
+border-radius: 5px;
+cursor: pointer;
+align-items:center;
+`;
 
 
 
 export default ()=>{
+  const [SECONDS,setSECONDS]=useState(60);
   const [words, setWords] = useState([])
   const [countDown, setCountDown] = useState(SECONDS)
   const [currInput, setCurrInput] = useState("")
@@ -81,6 +93,9 @@ export default ()=>{
   }, [status])
 
   function start() {
+    if(isNaN(countDown))return;
+    if(countDown<1)return;
+
     if (status === 'finished') {
       if(level=='Easy'){
         axios.get('https://typerace-10ww.onrender.com/easyParagraph').then((response)=>{
@@ -165,7 +180,6 @@ export default ()=>{
       return ''
     }
   }
-
  return (<BorderedDiv>
          <HeaderDiv>
             Hi {name}, you are at {level} level
@@ -175,6 +189,10 @@ export default ()=>{
          <ButtonsContainer onClick={()=>start()}>
              Start
          </ButtonsContainer>
+         <TimeContainer >
+         Enter time here...
+          <input type="text" onChange={(e)=>{setCountDown(e.target.value)}} minLength={2} maxLength={4}/>
+         </TimeContainer>
          <Container>
            You are in a single player Race.<br/>
            Go! 
