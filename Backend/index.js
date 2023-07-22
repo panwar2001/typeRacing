@@ -27,9 +27,9 @@ setInterval(() => {
       easyLevelData={};
       mediumLevelData={};
       hardLevelData={};
-      easyParagraph=generate(70)
-      mediumParagraph=generate(100);
-      hardParagraph=generate(120);
+      easyParagraph=generate(70,"easy")
+      mediumParagraph=generate(90,"medium");
+      hardParagraph=generate(120,"hard");
       startTime=Date.now();
     }
       easy.emit("players_update",remainingTime,easyLevelData,(Date.now()-startTime)/60000.0);

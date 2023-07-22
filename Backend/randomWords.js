@@ -1953,10 +1953,16 @@ const wordList = [
     "zulu",
   ];
 
-function generate(count) {
-     let words=[];
+function generate(count,type) {
+     let words=[],complex="$#@!%^&*)(`,?;";
      for(let i=0;i<count;i++){
-       words.push(wordList[Math.random()*1952|0]);        
+      let word=wordList[Math.random()*1952|0];
+      if(type!="easy"){
+       if(Math.random()*1|0){
+         word+=complex[(Math.random()*13|0)];
+       }
+      }
+      words.push(word);
      }    
      return words;
   }
