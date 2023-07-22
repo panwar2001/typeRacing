@@ -1,8 +1,7 @@
 import styled from "styled-components";
 import {useState, useEffect, useRef} from 'react'
-import {generate} from 'random-words'
 import { useLocation } from "react-router-dom";
-
+import axios from "axios";
 import "./TypingGame.css";
 import ProgressBar from "../ProgressBar";
 
@@ -67,17 +66,13 @@ export default ()=>{
   const [currChar, setCurrChar] = useState("")
   const [correct, setCorrect] = useState(0)
   const [incorrect, setIncorrect] = useState(0)
-  const [status, setStatus] = useState("waiting")
+  const [status, setStatus] = useState("finished")
   const textInput = useRef(null)
   const location = useLocation();
   const name=location.state?.name;
   const level=location.state?.level;
-  const NUMB_OF_WORDS=level=='Easy'?50:(level=='Medium'?80:120);
   const startTime=useRef();
   const [wpm,setWpm]=useState();
-  useEffect(() => {
-    setWords(generateWords())
-  }, [])
 
   useEffect(() => {
     if (status === 'started') {
@@ -85,14 +80,21 @@ export default ()=>{
     }
   }, [status])
 
-  function generateWords() {
-    return new Array(NUMB_OF_WORDS).fill(null).map(() => generate())
-  }
-
   function start() {
-
     if (status === 'finished') {
-      setWords(generateWords())
+      if(level=='Easy'){
+        axios.get('https://typerace-10ww.onrender.com/easyParagraph').then((response)=>{
+          setWords(response.data.paragraph);
+        });
+      }else if(level=='Medium'){
+        axios.get('https://typerace-10ww.onrender.com/mediumParagraph').then((response)=>{
+          setWords(response.data.paragraph);
+        });
+        }else{
+          axios.get('https://typerace-10ww.onrender.com/hardParagraph').then((response)=>{
+            setWords(response.data.paragraph);
+          });     
+        }
       setCurrWordIndex(0)
       setCorrect(0)
       setIncorrect(0)
