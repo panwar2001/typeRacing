@@ -19,7 +19,7 @@ let remainingTime = 91;
 
 let easyLevelData={}, mediumLevelData={}, hardLevelData={};
 let easyParagraph,mediumParagraph,hardParagraph;
-let startTime=0;
+let startTime=Date.now();
 
 setInterval(() => {
     remainingTime=remainingTime-1>=0?remainingTime-1:90;
@@ -30,34 +30,36 @@ setInterval(() => {
       easyParagraph=generate(70)
       mediumParagraph=generate(100);
       hardParagraph=generate(120);
+      startTime=Date.now();
     }
-      easy.emit("players_update",remainingTime,easyLevelData);
-      medium.emit("players_update",remainingTime,mediumLevelData);
-      hard.emit("players_update",remainingTime,hardLevelData);
+      easy.emit("players_update",remainingTime,easyLevelData,(Date.now()-startTime)/60000.0);
+      medium.emit("players_update",remainingTime,mediumLevelData,(Date.now()-startTime)/60000.0);
+      hard.emit("players_update",remainingTime,hardLevelData,(Date.now()-startTime)/60000.0);
   }, 1000); 
 easy.on('connection', (socket) => {
    socket.on('playerInfo', (name,speed) => {
     easyLevelData[socket.id]={
       name:name,
-      wpm:speed
+      words:speed
     }
-    console.log(name,speed);
   });
 });
 medium.on('connection', (socket) => {
   socket.on('playerInfo', (name,speed) => {
     mediumLevelData[socket.id]={
       name:name,
-      wpm:speed
+      words:speed
     }
+    console.log(name,speed);
   });
 });
 hard.on('connection', (socket) => {
-  socket.on('joinGame', (name,speed) => {
+  socket.on('playerInfo', (name,speed) => {
     hardLevelData[socket.id]={
       name:name,
-      wpm:speed
+      words:speed
     }
+    console.log(name,speed);
   });
 });
 

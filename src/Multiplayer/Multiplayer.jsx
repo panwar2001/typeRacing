@@ -1,14 +1,14 @@
 import styled from "styled-components";
-import Player from "./Player";
 import {useState, useEffect, useRef} from 'react'
 import { useLocation } from "react-router-dom";
 import { io } from 'socket.io-client';
 import "./TypingGame.css";
 import axios from "axios";
 import LeaderBoard from "../LeaderBoard";
-const easy=io("https://typerace-10ww.onrender.com/easy");
-const medium=io("https://typerace-10ww.onrender.com/medium");
-const hard=io("https://typerace-10ww.onrender.com/hard");
+import ProgressBar from "./ProgressBar";
+const easy=io("http://localhost:8080/easy");
+const medium=io("http://localhost:8080/medium");
+const hard=io("http://localhost:8080/hard");
 
  const HeaderDiv=styled.div`
   color:white;
@@ -75,7 +75,7 @@ export default ()=>{
   const location = useLocation();
   const name=location.state?.name;
   const level=location.state?.level;
-
+  const [wpm,setWpm]=useState(0);
   useEffect(() => {
     if (status === 'started') {
       textInput.current.focus()
@@ -84,11 +84,11 @@ export default ()=>{
 
   useEffect(()=>{
     if(level=='Easy'){
-      easy.emit("playerInfo",name,correct*2);
+      easy.emit("playerInfo",name,correct);
     }else if(level=='Medium'){
-      medium.emit("playerInfo",name,correct*2);
-    }else{
-      hard.emit("playerInfo",name,correct*2);
+      medium.emit("playerInfo",name,correct);
+    }else if(level=='Hard'){
+      hard.emit("playerInfo",name,correct);
     }
   },[correct]);
 
@@ -99,65 +99,71 @@ export default ()=>{
       setIncorrect(0)
       setCurrCharIndex(-1)
       setCurrChar("")
+      setWpm(0);
     }
    
     if(level=='Easy'){
-      axios.get("https://typerace-10ww.onrender.com/easyParagraph").then((response)=>{
+      axios.get("http://localhost:8080/easyParagraph").then((response)=>{
         setWords(response.data.paragraph);
       });
-        easy.on("players_update",(countdown,data)=>{
+        easy.on("players_update",(countdown,data,timeElapsed)=>{
            setCountDown(countdown);
+           setWpm(Math.round(data[easy.id].words*100.0/timeElapsed)/100.0);
            if(countdown==0){
-            axios.get("https://typerace-10ww.onrender.com/easyParagraph").then((response)=>{
+            axios.get("http://localhost:8080/easyParagraph").then((response)=>{
               setWords(response.data.paragraph);
             });
               clear();
             }
-            const arr=Object.keys(data).map((id)=>{
-              return [data[id].name,data[id].wpm];
-            })
+              const arr=Object.keys(data).map((id)=>{
+                return [data[id].name,Math.round(data[id].words*100.0/timeElapsed)/100.0];
+              })
             arr.sort((a,b)=>{
               return a[1]<b[1];
             })
              setPlayers(arr);
         }); 
       }else if(level=='Medium'){
-        axios.get("https://typerace-10ww.onrender.com/mediumParagraph").then((response)=>{
+        axios.get("http://localhost:8080/mediumParagraph").then((response)=>{
           setWords(response.data.paragraph);
         });      
-        medium.on("players_update",(countdown,data)=>{
+        medium.on("players_update",(countdown,data,timeElapsed)=>{
+          console.log(data[medium.id].words,timeElapsed);
           setCountDown(countdown);
+          setWpm(Math.round(data[medium.id].words*100.0/timeElapsed)/100.0);
           if(countdown==0){
-            clear();
-            axios.get("https://typerace-10ww.onrender.com/mediumParagraph").then((response)=>{
+            axios.get("http://localhost:8080/mediumParagraph").then((response)=>{
               setWords(response.data.paragraph);
             });    
+            clear();
           }
           const arr=Object.keys(data).map((id)=>{
-            return [data[id].name,data[id].wpm];
+            return [data[id].name,Math.round(data[id].words*100.0/timeElapsed)/100.0];
           })
           arr.sort((a,b)=>{
-            return a[1]>b[1];
+            return a[1]<b[1];
           })
           setPlayers(arr);
        });
-      }else{
-        axios.get("https://typerace-10ww.onrender.com/hardParagraph").then((response)=>{
-          setWords(response.data.paragraph);
-        }); 
-        hard.on("players_update",(countdown,data)=>{
+      }else if(level=='Hard'){
+         axios.get("http://localhost:8080/hardParagraph").then((response)=>{
+              setWords(response.data.paragraph);
+            }); 
+         hard.on("players_update",(countdown,data,timeElapsed)=>{
+          console.log(data[hard.id].name,timeElapsed);
           setCountDown(countdown);
+          setWpm(Math.round(data[hard.id].words*100.0/timeElapsed)/100.0);
           if(countdown==0){
             clear();
-            axios.get("https://typerace-10ww.onrender.com/hardParagraph").then((response)=>{
+            axios.get("http://localhost:8080/hardParagraph").then((response)=>{
               setWords(response.data.paragraph);
             });    
           }
           const arr=Object.keys(data).map((id)=>{
-            return [data[id].name,data[id].wpm];
+            return [data[id].name,Math.round(data[id].words*100.0/timeElapsed)/100.0];
           })
           arr.sort((a,b)=>{
-            return a[1]>b[1];
+             return a[1]<b[1];
           })
           setPlayers(arr);
        });
@@ -166,13 +172,11 @@ export default ()=>{
 
 
   function handleKeyDown({keyCode, key}) {
-    // space bar 
     if (keyCode === 32) {
       checkMatch()
       setCurrInput("")
       setCurrWordIndex(currWordIndex + 1)
       setCurrCharIndex(-1)
-    // backspace
     } else if (keyCode === 8) {
       setCurrCharIndex(currCharIndex - 1)
       setCurrChar("")
@@ -211,13 +215,13 @@ export default ()=>{
          <HeaderDiv>
             Hi {name}, you are at {level} level
             <br/>
-            Practice Racetrack | Time Left For Next Game: {countDown} | Words per minute:{correct*2} 
+            Practice Racetrack | Time Left For Next Game: {countDown} | Words per minute:{wpm} 
          </HeaderDiv>
          <Container>
            You are in a single player Race.<br/>
            Go! 
          </Container>
-         <Player distance={correct/100.0}/>
+         <ProgressBar correct={correct} totalWords={words.length}/>
          <InnerContainer>
              <TextContainer>
              {(status === 'started') && words.map((word, i) => (
