@@ -3,6 +3,9 @@ import Characters from "./Characters";
 import Styled from "styled-components";
 import Practice from "./Practice/Practice";
 import Multiplayer from "./Multiplayer/Multiplayer";
+import ParticlesBg from "particles-bg";
+import "./App.css";
+
 
 const Name=Styled.div`
 display: flex;
@@ -13,10 +16,10 @@ font-size: 1.5em;
 font-weight: bold;
 `;
 const Field=Styled.div`
-border-radius: 4px;
+border-radius: 30px;
 color:white;
 position: relative;
-background-color: black;
+background-color: #181B1F;
 transition: 0.3s all;
 height:70vh;
 width: 60%;
@@ -24,14 +27,15 @@ justify-content: center;
 align-items: center;
 text-align: center; 
 &:hover{
-  background-color:#CBC3E3;
   box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.05);    
-  color:black;
 }
 `;
 const Input=Styled.input`
   font-size: 1.3em;
   margin-top: 10%;
+  border-radius: 1.8em;
+  outline: none;
+  padding: 0.5em 1em;
 `;
 const Button=Styled.button`
 background-color: black;
@@ -54,19 +58,27 @@ export default ()=>{
       return <Multiplayer name={name} level={level}/>
     }
    if(level!=null){
-    return <Name>
+    return ( 
+      <>
+      <Name>
         <Field>
           {name}
-          <br/>
+   
           <Button onClick={()=>setPlay('Practice')}>Join  Practice </Button>        
           <Button onClick={()=>setPlay('Multi')}>Join Multi Player</Button>        
      </Field>
    </Name>
+        <ParticlesBg type={"polygon"} bg={true} />
+        </>
+    );
     }
-   return <Name>
+   return (
+     <>
+     <Name>
     <Field>
+      <div style={{ marginTop: "20px" }}>
         Enter your name
-        <br/>
+     </div>
          <Input type='text' value={name} onChange={(e)=>setName(e.target.value)}/>
          <br/>
            Level of difficulty?
@@ -75,4 +87,7 @@ export default ()=>{
           <Button onClick={()=>setLevel('Hard')}>Hard</Button>        
      </Field>
    </Name>
+       <ParticlesBg type={"polygon"} bg={true} />
+       </>
+     );
 }
