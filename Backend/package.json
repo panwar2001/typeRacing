@@ -1,14 +1,14 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "Backend for mediasoup multi client connection ",
+  "description": "Backend for Type Racing",
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon index.js"
   },
-  "author": "Ayush Panwar",
+  "author": "The Hackstreet Boys(Ayush panwar, ayush negi, vishal Jindal)",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",

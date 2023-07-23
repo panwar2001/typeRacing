@@ -5,7 +5,7 @@ import "./TypingGame.css";
 import axios from "axios";
 import LeaderBoard from "../LeaderBoard";
 import ProgressBar from "../ProgressBar";
-const URL="http://localhost:8080";
+const URL="https://typerace-10ww.onrender.com";
 const easy=io(`${URL}/easy`);
 const medium=io(`${URL}/medium`);
 const hard=io(`${URL}/hard`);
