@@ -17,9 +17,10 @@ const hard=io(`${URL}/hard`);
  const BorderedDiv = styled.div`
   margin-top: 20px;
   background-color: #0d1117;
-  border: 1px solid #6e40c9 ;
-  border-radius: 5px;
+  border: 1px solid #6e40c9;
   padding: 20px;
+  border-radius: 30px;
+  width: 95%;
 `;
  const TextContainer = styled.p`
   font-size: 1.32rem;
@@ -217,7 +218,9 @@ export default ({name,level})=>{
     }
   };
 
- return (<><BorderedDiv>
+ return (<>
+  <div style={{ display: "flex", justifyContent: "center" }}>
+  <BorderedDiv>
          <HeaderDiv>
             Hi {name}, you are at {level} level
             <br/>
@@ -252,6 +255,7 @@ export default ({name,level})=>{
                autoFocus/> 
          </InnerContainer>
        </BorderedDiv>
+   </div>
         {players&&<LeaderBoard data={players}/>}
        </>
        )    
