@@ -64,8 +64,8 @@ export default ()=>{
         <Field>
           <h2>{name}</h2>
    
-          <Button onClick={()=>setPlay('Practice')}>Join  Practice </Button>        
-          <Button onClick={()=>setPlay('Multi')}>Join Multi Player</Button>        
+          <Button className="my-button" onClick={()=>setPlay('Practice')}>Join  Practice </Button>        
+          <Button className="my-button"  onClick={()=>setPlay('Multi')}>Join Multi Player</Button>        
      </Field>
    </Name>
         <ParticlesBg type={"polygon"} bg={true} />
@@ -82,9 +82,9 @@ export default ()=>{
          <Input type='text' value={name} onChange={(e)=>setName(e.target.value)}/>
          <br/>
            Level of difficulty?
-          <Button onClick={()=>setLevel('Easy')}>Easy </Button>        
-          <Button onClick={()=>setLevel('Medium')}>Medium</Button>        
-          <Button onClick={()=>setLevel('Hard')}>Hard</Button>        
+          <Button className="my-button" onClick={()=>setLevel('Easy')}>Easy </Button>        
+          <Button className="my-button" onClick={()=>setLevel('Medium')}>Medium</Button>        
+          <Button className="my-button" onClick={()=>setLevel('Hard')}>Hard</Button>        
      </Field>
    </Name>
        <ParticlesBg type={"polygon"} bg={true} />
