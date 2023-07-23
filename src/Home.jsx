@@ -1,7 +1,9 @@
 import { useState } from "react";
 import Characters from "./Characters";
-import { Link} from "react-router-dom";
 import Styled from "styled-components";
+import Practice from "./Practice/Practice";
+import Multiplayer from "./Multiplayer/Multiplayer";
+
 const Name=Styled.div`
 display: flex;
 justify-content: center;
@@ -45,17 +47,19 @@ margin-top:20%;
 export default ()=>{
     const [name,setName]=useState(Characters());
     const [level,setLevel]=useState(null);
+    const [play,setPlay]=useState(null);
+    if(play=='Practice'){
+      return <Practice name={name} level={level}/>
+    }else if(play=='Multi'){
+      return <Multiplayer name={name} level={level}/>
+    }
    if(level!=null){
     return <Name>
         <Field>
           {name}
           <br/>
-        <Link to="/Practice" state={{ name:name ,level:level}} className="link">
-          <Button >Join  Practice </Button>        
-        </Link>
-        <Link to="/MultiPlayer" state={{ name:name ,level:level}} className="link">
-          <Button >Join Multi Player</Button>        
-        </Link>
+          <Button onClick={()=>setPlay('Practice')}>Join  Practice </Button>        
+          <Button onClick={()=>setPlay('Multi')}>Join Multi Player</Button>        
      </Field>
    </Name>
     }

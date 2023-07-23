@@ -1,11 +1,8 @@
 import styled from "styled-components";
 import {useState, useEffect, useRef} from 'react'
-import { useLocation } from "react-router-dom";
 import axios from "axios";
 import "./TypingGame.css";
 import ProgressBar from "../ProgressBar";
-
-
  const HeaderDiv=styled.div`
   color:white;
   font-size:2em;
@@ -68,7 +65,7 @@ align-items:center;
 
 
 
-export default ()=>{
+export default ({name,level})=>{
   const [SECONDS,setSECONDS]=useState(60);
   const [words, setWords] = useState([])
   const [countDown, setCountDown] = useState(SECONDS)
@@ -80,9 +77,6 @@ export default ()=>{
   const [incorrect, setIncorrect] = useState(0)
   const [status, setStatus] = useState("finished")
   const textInput = useRef(null)
-  const location = useLocation();
-  const name=location.state?.name;
-  const level=location.state?.level;
   const startTime=useRef();
   const [wpm,setWpm]=useState();
 
@@ -178,10 +172,22 @@ export default ()=>{
     } else if (wordIdx === currWordIndex && currCharIndex >= words[currWordIndex].length) {
       return 'has-background-danger'
     } else {
-      return ''
+      return '';
     }
   }
- return (<BorderedDiv>
+  const anotherStyle = (idx, wordIdx) => {
+    if (idx === currCharIndex + 1 && wordIdx === currWordIndex) {
+      return {
+        textDecoration: "underline blue",
+        color: "blue",
+        textDecorationSkipInk: "none",
+      };
+    } else if (wordIdx === currWordIndex) {
+      return { textDecoration: "underline" };
+    }
+  };
+ return (<>
+       <BorderedDiv>
          <HeaderDiv>
             Hi {name}, you are at {level} level
             <br/>
@@ -202,10 +208,10 @@ export default ()=>{
          <InnerContainer>
              <TextContainer>
              {(status === 'started') && words.map((word, i) => (
-                  <span key={i}>
+                  <span key={i} >
                     <span>
                       {word.split("").map((char, idx) => (
-                        <span className={getCharClass(i, idx, char)} key={idx}>{char}</span>
+                        <span style={anotherStyle(idx,i)} className={getCharClass(i, idx, char)} key={idx}>{char}</span>
                       )) }
                     </span>
                     <span> </span>
@@ -223,5 +229,6 @@ export default ()=>{
                autoFocus/> 
          </InnerContainer>
        </BorderedDiv>
+       </>
        )    
 }

@@ -1,12 +1,11 @@
 import styled from "styled-components";
 import {useState, useEffect, useRef} from 'react'
-import { useLocation } from "react-router-dom";
 import { io } from 'socket.io-client';
 import "./TypingGame.css";
 import axios from "axios";
 import LeaderBoard from "../LeaderBoard";
 import ProgressBar from "../ProgressBar";
-const URL="https://typerace-10ww.onrender.com";
+const URL="http://localhost:8080";
 const easy=io(`${URL}/easy`);
 const medium=io(`${URL}/medium`);
 const hard=io(`${URL}/hard`);
@@ -61,7 +60,7 @@ const StyledInput = styled.input`
 
 
 
-export default ()=>{
+export default ({name,level})=>{
   const [words, setWords] = useState([])
   const [countDown, setCountDown] = useState('');
   const [currInput, setCurrInput] = useState("")
@@ -73,9 +72,6 @@ export default ()=>{
   const [status, setStatus] = useState("started")
   const textInput = useRef(null)
   const [players,setPlayers]=useState(null);
-  const location = useLocation();
-  const name=location.state?.name;
-  const level=location.state?.level;
   const [wpm,setWpm]=useState(0);
   useEffect(() => {
     if (status === 'started') {
@@ -104,16 +100,13 @@ export default ()=>{
     }
    
     if(level=='Easy'){
-      axios.get(`${URL}/easyParagraph`).then((response)=>{
-        setWords(response.data.paragraph);
-      });
-        easy.on("players_update",(countdown,data,timeElapsed)=>{
+        easy.on("players_update",(countdown,data,timeElapsed,paragraph)=>{
            setCountDown(countdown);
-           setWpm(Math.round(data[easy.id].words*100.0/timeElapsed)/100.0);
+           if(Object.keys(data).length){
+            setWpm(Math.round(data[easy.id].words*100.0/timeElapsed)/100.0);
+           }
+           if(paragraph)setWords(paragraph);
            if(countdown==0){
-            axios.get(`${URL}/easyParagraph`).then((response)=>{
-              setWords(response.data.paragraph);
-            });
               clear();
             }
               const arr=Object.keys(data).map((id)=>{
@@ -124,18 +117,17 @@ export default ()=>{
             })
              setPlayers(arr);
         }); 
-      }else if(level=='Medium'){
-        axios.get(`${URL}/mediumParagraph`).then((response)=>{
+        axios.get(`${URL}/easyParagraph`).then((response)=>{
           setWords(response.data.paragraph);
-        });      
-        medium.on("players_update",(countdown,data,timeElapsed)=>{
-          console.log(data[medium.id].words,timeElapsed);
+        }); 
+      }else if(level=='Medium'){
+        medium.on("players_update",(countdown,data,timeElapsed,paragraph)=>{
           setCountDown(countdown);
-          setWpm(Math.round(data[medium.id].words*100.0/timeElapsed)/100.0);
-          if(countdown==0){
-            axios.get(`${URL}/mediumParagraph`).then((response)=>{
-              setWords(response.data.paragraph);
-            });    
+          if(Object.keys(data).length){
+           setWpm(Math.round(data[medium.id].words*100.0/timeElapsed)/100.0);
+          }
+          if(paragraph)setWords(paragraph);
+          if(countdown==0){    
             clear();
           }
           const arr=Object.keys(data).map((id)=>{
@@ -146,19 +138,18 @@ export default ()=>{
           })
           setPlayers(arr);
        });
+       axios.get(`${URL}/mediumParagraph`).then((response)=>{
+        setWords(response.data.paragraph);
+      }); 
       }else if(level=='Hard'){
-         axios.get(`${URL}/hardParagraph`).then((response)=>{
-              setWords(response.data.paragraph);
-            }); 
-         hard.on("players_update",(countdown,data,timeElapsed)=>{
-          console.log(data[hard.id].name,timeElapsed);
+         hard.on("players_update",(countdown,data,timeElapsed,paragraph)=>{
           setCountDown(countdown);
-          setWpm(Math.round(data[hard.id].words*100.0/timeElapsed)/100.0);
-          if(countdown==0){
+          if(Object.keys(data).length){
+           setWpm(Math.round(data[hard.id].words*100.0/timeElapsed)/100.0);
+           }
+           if(paragraph)setWords(paragraph);
+          if(countdown==0){    
             clear();
-            axios.get(`${URL}/hardParagraph`).then((response)=>{
-              setWords(response.data.paragraph);
-            });    
           }
           const arr=Object.keys(data).map((id)=>{
             return [data[id].name,Math.round(data[id].words*100.0/timeElapsed)/100.0];
@@ -168,6 +159,9 @@ export default ()=>{
           })
           setPlayers(arr);
        });
+       axios.get(`${URL}/hardParagraph`).then((response)=>{
+        setWords(response.data.paragraph);
+      }); 
       }
   },[])  
 
@@ -211,7 +205,17 @@ export default ()=>{
       return ''
     }
   }
-
+  const anotherStyle = (idx, wordIdx) => {
+    if (idx === currCharIndex + 1 && wordIdx === currWordIndex) {
+      return {
+        textDecoration: "underline blue",
+        color: "blue",
+        textDecorationSkipInk: "none",
+      };
+    } else if (wordIdx === currWordIndex) {
+      return { textDecoration: "underline" };
+    }
+  };
 
  return (<><BorderedDiv>
          <HeaderDiv>
@@ -230,7 +234,7 @@ export default ()=>{
                   <span key={i}>
                     <span>
                       {word.split("").map((char, idx) => (
-                        <span className={getCharClass(i, idx, char)} key={idx}>{char}</span>
+                        <span style={anotherStyle(idx,i)} className={getCharClass(i, idx, char)} key={idx}>{char}</span>
                       )) }
                     </span>
                     <span> </span>
