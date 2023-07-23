@@ -32,9 +32,9 @@ setInterval(() => {
       hardParagraph=generate(120,"hard");
       startTime=Date.now();
     }
-      easy.emit("players_update",remainingTime,easyLevelData,(Date.now()-startTime)/60000.0);
-      medium.emit("players_update",remainingTime,mediumLevelData,(Date.now()-startTime)/60000.0);
-      hard.emit("players_update",remainingTime,hardLevelData,(Date.now()-startTime)/60000.0);
+      easy.emit("players_update",remainingTime,easyLevelData,(Date.now()-startTime)/60000.0,remainingTime==90?easyParagraph:null);
+      medium.emit("players_update",remainingTime,mediumLevelData,(Date.now()-startTime)/60000.0,remainingTime==90?mediumParagraph:null);
+      hard.emit("players_update",remainingTime,hardLevelData,(Date.now()-startTime)/60000.0,remainingTime==90?hardParagraph:null);
   }, 1000); 
 easy.on('connection', (socket) => {
    socket.on('playerInfo', (name,speed) => {
