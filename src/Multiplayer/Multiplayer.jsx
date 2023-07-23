@@ -16,7 +16,7 @@ const hard=io(`${URL}/hard`);
  `;
  const BorderedDiv = styled.div`
   margin-top: 20px;
-  background-color: #0d1117;
+  background-color: #00203fff;
   border: 1px solid #6e40c9;
   padding: 20px;
   border-radius: 30px;
@@ -36,7 +36,7 @@ padding-bottom:2%;
 const InnerContainer=styled.div`
  margin-top: 20px; 
  border: 1px solid purple ;
- background-color:#101010;
+ background-color: #00203fff;
  border-radius: 5px;
  padding: 20px;
 `;
@@ -49,6 +49,7 @@ padding: 10px 60px;
 border-radius: 5px;
 cursor: pointer;
 align-items:center;
+margin: 30px;
 `;
 
 const StyledInput = styled.input`
