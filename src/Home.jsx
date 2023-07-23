@@ -19,7 +19,7 @@ const Field=Styled.div`
 border-radius: 30px;
 color:white;
 position: relative;
-background-color: #181B1F;
+background-color: #00203fff;
 transition: 0.3s all;
 height:70vh;
 width: 60%;
