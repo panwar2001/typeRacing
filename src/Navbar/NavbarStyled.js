@@ -1,13 +1,15 @@
 import styled from "styled-components";
 
 export const NavbarContainer = styled.div`
-  width: 100%;
+  width: 95%;
   height: 80px;
-  background-color: #161b22;
+  border-radius: 20px;
+  background-color: #181b1f;
   display: flex;
   justify-content: space-around;
   align-items: center;
   color: #f0f6fc;
+  margin-top: 5px;
 `;
 export const StyledUl = styled.ul`
   list-style: none;
