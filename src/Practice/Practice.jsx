@@ -187,6 +187,7 @@ export default ({name,level})=>{
     }
   };
  return (<>
+  <div style={{ display: "flex", justifyContent: "center" }}>
        <BorderedDiv>
          <HeaderDiv>
             Hi {name}, you are at {level} level
@@ -229,6 +230,7 @@ export default ({name,level})=>{
                autoFocus/> 
          </InnerContainer>
        </BorderedDiv>
+   </div>
        </>
        )    
 }
