@@ -12,3 +12,11 @@ cd typeRacing
 npm install 
 npm run dev
 ```
+
+# Product Demonstration
+# Home Page
+![Home page](./Type%20Racing%20Images/home.png)
+# Practice Mode
+![Practice](./Type%20Racing%20Images/Practice.png)
+# Multi Player Mode
+![Multi Player](./Type%20Racing%20Images/Multiplayer.png)

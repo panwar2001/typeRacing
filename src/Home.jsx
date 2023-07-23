@@ -46,7 +46,7 @@ border-radius: 5px;
 margin: 10px 10px;
 cursor: pointer;
 float:bottom;
-margin-top:20%;
+margin-top:17%;
 `;
 export default ()=>{
     const [name,setName]=useState(Characters());
@@ -62,7 +62,7 @@ export default ()=>{
       <>
       <Name>
         <Field>
-          {name}
+          <h2>{name}</h2>
    
           <Button onClick={()=>setPlay('Practice')}>Join  Practice </Button>        
           <Button onClick={()=>setPlay('Multi')}>Join Multi Player</Button>        

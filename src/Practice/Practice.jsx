@@ -66,9 +66,8 @@ align-items:center;
 
 
 export default ({name,level})=>{
-  const [SECONDS,setSECONDS]=useState(60);
   const [words, setWords] = useState([])
-  const [countDown, setCountDown] = useState(SECONDS)
+  const [countDown, setCountDown] = useState(60)
   const [currInput, setCurrInput] = useState("")
   const [currWordIndex, setCurrWordIndex] = useState(0)
   const [currCharIndex, setCurrCharIndex] = useState(-1)
@@ -78,7 +77,7 @@ export default ({name,level})=>{
   const [status, setStatus] = useState("finished")
   const textInput = useRef(null)
   const startTime=useRef();
-  const [wpm,setWpm]=useState();
+  const [wpm,setWpm]=useState(0);
 
   useEffect(() => {
     if (status === 'started') {
@@ -126,7 +125,7 @@ export default ({name,level})=>{
           if (prevCountdown === 0) {
             clearInterval(interval)
             setStatus('finished')
-            return SECONDS
+            return 60;
           } else {
             return prevCountdown - 1
           }
@@ -191,15 +190,15 @@ export default ({name,level})=>{
          <HeaderDiv>
             Hi {name}, you are at {level} level
             <br/>
-            Practice Racetrack | Time Left: {countDown} | Words per minute:{Math.round((correct*100.0)/wpm)/100} 
+            Practice Racetrack | Time Left: {countDown} | Words per minute:{wpm==0?0:Math.round((correct*100.0)/wpm)/100} 
          </HeaderDiv>
          <ButtonsContainer onClick={()=>start()}>
              Start
          </ButtonsContainer>
-         <TimeContainer >
+         {status!== 'started'&&<TimeContainer >
          Enter time here...
           <input type="text" onChange={(e)=>{setCountDown(e.target.value)}} minLength={2} maxLength={4}/>
-         </TimeContainer>
+         </TimeContainer>}
          <Container>
            You are in a single player Race.<br/>
            Go! 
