@@ -5,6 +5,8 @@ import Practice from "./Practice/Practice";
 import Multiplayer from "./Multiplayer/Multiplayer";
 import ParticlesBg from "particles-bg";
 import "./App.css";
+
+
 const Name=Styled.div`
 display: flex;
 justify-content: center;
