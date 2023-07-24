@@ -48,8 +48,12 @@ margin: 30px;
 const StyledInput = styled.input`
   width: 100%;
   margin-top: 10px;
-  font-size: 1.15rem;
-  background-color: "white"
+ 
+  background-color: "white";
+  font-size: 2.15rem;
+  height: 40px;
+  text-indent: 38%;
+  outline: none;
 `;
 
 const TimeContainer=styled.div`
