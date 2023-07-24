@@ -7,6 +7,8 @@ import Styled from "styled-components";
   border-radius: 5px;
   padding: 20px;
   color:white;
+  border-radius: 30px;
+  width: 95%;
 `;
 const Center=Styled.div`
   display:flex;
@@ -28,7 +30,9 @@ const InnerContainer=Styled.div`
  }
 `;
 export default ({data})=>{
-return <BorderedDiv>
+return (
+ <div style={{ display: "flex", justifyContent: "center" }}> 
+ <BorderedDiv>
         <Center>
         <table>
         <thead>
@@ -83,4 +87,6 @@ return <BorderedDiv>
          </table>
         </Center>
     </BorderedDiv>
+   </div>
+  )
 }

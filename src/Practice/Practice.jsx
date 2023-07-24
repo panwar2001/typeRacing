@@ -9,7 +9,7 @@ import ProgressBar from "../ProgressBar";
  `;
  const BorderedDiv = styled.div`
   margin-top: 20px;
-  background-color: #0d1117;
+  background-color: #00203fff;
   border: 1px solid #6e40c9 ;
   border-radius: 30px;
   padding: 20px;
@@ -29,7 +29,7 @@ padding-bottom:2%;
 const InnerContainer=styled.div`
  margin-top: 20px; 
  border: 1px solid purple ;
- background-color:#101010;
+ background-color: #00203fff;
  border-radius: 5px;
  padding: 20px;
 `;
@@ -42,6 +42,7 @@ padding: 10px 60px;
 border-radius: 5px;
 cursor: pointer;
 align-items:center;
+margin: 30px;
 `;
 
 const StyledInput = styled.input`
@@ -53,7 +54,7 @@ const StyledInput = styled.input`
 
 const TimeContainer=styled.div`
 display:flex;
-background-color: black;
+background-color: #00203fff;
 color: white;
 width:30%;
 border:2px solid silver;
@@ -161,6 +162,13 @@ export default ({name,level})=>{
       setIncorrect(incorrect + 1)
     }
   }
+ 
+ const inputStyle = {
+    outline: "none",
+    borderRadius: "1.8em",
+    padding: "6px",
+    fontSize: "16px",
+  };
 
   function getCharClass(wordIdx, charIdx, char) {
     if (wordIdx === currWordIndex && charIdx === currCharIndex && currChar && status !== 'finished') {
@@ -194,12 +202,12 @@ export default ({name,level})=>{
             <br/>
             Practice Racetrack | Time Left: {countDown} | Words per minute:{wpm==0?0:Math.round((correct*100.0)/wpm)/100} 
          </HeaderDiv>
-         <ButtonsContainer onClick={()=>start()}>
+         <ButtonsContainer className="my-button" onClick={()=>start()}>
              Start
          </ButtonsContainer>
          {status!== 'started'&&<TimeContainer >
          Enter time here...
-          <input type="text" onChange={(e)=>{setCountDown(e.target.value)}} minLength={2} maxLength={4}/>
+          <input style={inputStyle} type="text" onChange={(e)=>{setCountDown(e.target.value)}} minLength={2} maxLength={4}/>
          </TimeContainer>}
          <Container>
            You are in a single player Race.<br/>
