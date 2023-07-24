@@ -9,8 +9,8 @@ const ProgressBarContainer = styled.div`
 
 const ProgressBarFill = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: right;
+  justify-content: right;
   width: ${props => `${props.percentage}%`};
   background: green;
   height: 100%;
@@ -18,16 +18,7 @@ const ProgressBarFill = styled.div`
   font-weight: bold;
   transition: width 0.3s ease-in-out;
 `;
-const CarSVG = styled.svg`
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 30px;
-  height: auto;
-  fill: #fff;
 
-`;
 const calculatePercentage = (correct, wordsLength) => {
     if (wordsLength!== 0) {
       return ((correct/ wordsLength) * 100).toFixed(2);
@@ -40,7 +31,7 @@ const percentage = calculatePercentage(correct, totalWords);
   return (
     <ProgressBarContainer>
       <ProgressBarFill percentage={percentage}>{`${percentage}%`}
-      <img
+        <img
         src='/car.svg'
         width='58'
         height='24'

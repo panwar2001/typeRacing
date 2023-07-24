@@ -114,6 +114,7 @@ export default ({name,level})=>{
       setIncorrect(0)
       setCurrCharIndex(-1)
       setCurrChar("")
+      setCurrInput('');
       startTime.current=null;
     }
      let getElapsedTime=()=>{

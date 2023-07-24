@@ -103,6 +103,7 @@ export default ({name,level})=>{
       setCurrCharIndex(-1)
       setCurrChar("")
       setWpm(0);
+      setCurrInput('');
     }
    
     if(level=='Easy'){
