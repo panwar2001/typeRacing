@@ -202,7 +202,7 @@ export default ({name,level})=>{
             <br/>
             Practice Racetrack | Time Left: {countDown} | Words per minute:{wpm==0?0:Math.round((correct*100.0)/wpm)/100} 
          </HeaderDiv>
-         <ButtonsContainer onClick={()=>start()}>
+         <ButtonsContainer className="my-button" onClick={()=>start()}>
              Start
          </ButtonsContainer>
          {status!== 'started'&&<TimeContainer >
